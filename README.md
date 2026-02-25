@@ -78,4 +78,4 @@ Use `Nam_layer[[1]]` to select a specific band, or omit the index to crop all ba
 
 ## Reference
 
-NamSoil spatial predictions are described in the associated Zenodo record: [https://zenodo.org/records/4090927](https://zenodo.org/records/4090927).
+NamSoil spatial predictions are described in the associated Zenodo record: [https://zenodo.org/records/17618737](https://zenodo.org/records/17618737).
