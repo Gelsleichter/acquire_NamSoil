@@ -1,12 +1,12 @@
 # Accessing NamSoil Layers from Zenodo
 
-Quick-start guide for reading, visualising, and cropping [NamSoil](https://zenodo.org/records/4090927) raster layers directly from Zenodo using R — no full download required.
+Quick-start guide for reading, visualising, and cropping [NamSoil](https://zenodo.org/records/17618737) raster layers directly from Zenodo using R — no full download required.
 
 ## Requirements
 
 - **R** ≥ 4.1
 - **terra** package (`install.packages("terra")`)
-- GDAL with `/vsicurl/` support (included with standard terra installations)
+- GDAL with `/vsicurl/` support (included with standard `terra` installations)
 
 ## Usage
 
@@ -15,7 +15,7 @@ Quick-start guide for reading, visualising, and cropping [NamSoil](https://zenod
 library(terra)
 
 # Product link
-NamSoil_layer <- "https://zenodo.org/records/4090927/files/sol_log.oc_m_30m_0..20cm_2001..2017_v0.13_wgs84.tif"
+NamSoil_layer <- "https://zenodo.org/records/4090927/files/sol_log.oc_m_30m_0..20cm_2001..2017_v0.13_wgs84.tif" # temporary (just an example from iSDA)
 
 # Read as raster with vsicurl enabled 
 # vsicurl: allows on-the-fly reading without download of the entire file. Source: https://gdal.org/en/stable/user/virtual_file_systems.html#vsicurl-http-https-ftp-files-random-access 
@@ -44,7 +44,7 @@ Nam_layer_cp <- terra::crop(Nam_layer[[1]], ext) # only the predicted mean layer
 terra::plot(Nam_layer_cp)
 
 # Write the aoi raster to disk
-writeRaster(dtm_cp, "aoi_Nam_soil_layer.tif", gdal=c("COMPRESS=NONE", "TFW=YES"), overwrite= T)
+writeRaster(Nam_layer_cp, "aoi_Nam_soil_layer.tif", gdal=c("COMPRESS=NONE", "TFW=YES"), overwrite= T)
 ```
 
 ## How it works
