@@ -11,22 +11,40 @@ Quick-start guide for reading, visualising, and cropping [NamSoil](https://zenod
 ## Usage
 
 ```r
+# Terra package to load and handle raster data
 library(terra)
 
-# Read layer on-the-fly from Zenodo (no download needed)
+# Product link
 NamSoil_layer <- "https://zenodo.org/records/4090927/files/sol_log.oc_m_30m_0..20cm_2001..2017_v0.13_wgs84.tif"
-Nam_layer <- terra::rast(NamSoil_layer, vsi = TRUE)
 
-# Quick visualisation
+# Read as raster with vsicurl enabled 
+# vsicurl: allows on-the-fly reading without download of the entire file. Source: https://gdal.org/en/stable/user/virtual_file_systems.html#vsicurl-http-https-ftp-files-random-access 
+Nam_layer <- terra::rast(NamSoil_layer, vsi= T) 
+Nam_layer
+
+# Quick check with plot
 terra::plot(Nam_layer)
 
-# Define and crop to area of interest
-ext <- terra::ext(17, 18, -20, -19)  # xmin, xmax, ymin, ymax
-Nam_layer_cp <- terra::crop(Nam_layer[[1]], ext)
+# Define the extent for the area of interest # option: click() on the plot to define the extent (xmin, xmax, ymin, ymax)
+ext <- terra::ext(17, 18, -20, -19) # xmin, xmax, ymin, ymax
 
-# Save cropped raster to disk
-terra::writeRaster(Nam_layer_cp, "aoi_Nam_soil_layer.tif",
-                   gdal = c("COMPRESS=NONE", "TFW=YES"), overwrite = TRUE)
+# Convert extent to polygon
+# aoi <- terra::vect("your_shapefile.shp") # if you have a shapefile for the area of interest
+aoi <- terra::as.points(ext, crs= terra::crs(Nam_layer)) # as points
+aoi <- terra::as.polygons(ext, crs= terra::crs(Nam_layer)) # as polygon
+
+# Plot the extent to see if it is correct
+terra::plot(aoi, add=T, border="magenta")
+
+# Crop 
+# Nam_layer_cp <- terra::crop(Nam_layer, ext) # all layers: predicted mean; 95th percentile; 5th percentile; 90% prediction interval (PI90)
+Nam_layer_cp <- terra::crop(Nam_layer[[1]], ext) # only the predicted mean layer (first layer) 
+
+# Plot the cropped raster
+terra::plot(Nam_layer_cp)
+
+# Write the aoi raster to disk
+writeRaster(dtm_cp, "aoi_Nam_soil_layer.tif", gdal=c("COMPRESS=NONE", "TFW=YES"), overwrite= T)
 ```
 
 ## How it works
